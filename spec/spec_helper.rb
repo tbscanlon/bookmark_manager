@@ -1,6 +1,7 @@
 require './app'
 require 'capybara/rspec'
 require 'rspec'
+require './spec/web_helpers.rb'
 
 ENV['RACK_ENV'] = 'test'
 

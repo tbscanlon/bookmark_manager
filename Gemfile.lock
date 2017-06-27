@@ -116,6 +116,7 @@ PLATFORMS
 DEPENDENCIES
   capybara
   data_mapper
+  dm-migrations
   dm-postgres-adapter
   rspec
   selenium-webdriver
@@ -125,4 +126,4 @@ RUBY VERSION
    ruby 2.4.0p0
 
 BUNDLED WITH
-   1.14.6
+   1.15.1
