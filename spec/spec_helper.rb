@@ -1,4 +1,4 @@
-require './app'
+require './app/app'
 require 'capybara/rspec'
 require 'rspec'
 require './spec/web_helpers.rb'
