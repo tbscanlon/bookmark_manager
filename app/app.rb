@@ -1,16 +1,17 @@
 ENV['RACK_ENV'] ||= "development"
 
+require 'bcrypt'
 require 'sinatra/base'
 require './app/init'
 require_relative 'helper'
 
 class BookmarkManager < Sinatra::Base
   enable :sessions
+  set :session_secret, 'very secure yes'
 
   get '/links' do
     @links = Link.all
     @tags = Tag.all
-    @user = current_user
     erb :links
   end
 
@@ -50,10 +51,17 @@ class BookmarkManager < Sinatra::Base
 
   post '/signup' do
     user = User.create(email: params[:email], password: params[:password])
+
     user.save
-    session[:email] = params[:email]
+    session[:email] = user.email
     p session[:email]
     redirect '/links'
+  end
+
+  helpers do
+    def current_user
+      @current_user ||= User.get(session[:email])
+    end
   end
 
   run! if app_file == $PROGRAM_NAME
