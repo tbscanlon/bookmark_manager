@@ -2,11 +2,15 @@ ENV['RACK_ENV'] ||= "development"
 
 require 'sinatra/base'
 require './app/init'
+require_relative 'helper'
 
 class BookmarkManager < Sinatra::Base
+  enable :sessions
+
   get '/links' do
     @links = Link.all
     @tags = Tag.all
+    @user = current_user
     erb :links
   end
 
@@ -38,6 +42,18 @@ class BookmarkManager < Sinatra::Base
     tag = Tag.first(name: params[:search])
     @links = tag.links
     erb :search
+  end
+
+  get '/signup' do
+    erb :signup
+  end
+
+  post '/signup' do
+    user = User.create(email: params[:email], password: params[:password])
+    user.save
+    session[:email] = params[:email]
+    p session[:email]
+    redirect '/links'
   end
 
   run! if app_file == $PROGRAM_NAME
