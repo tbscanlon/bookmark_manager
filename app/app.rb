@@ -20,6 +20,17 @@ class BookmarkManager < Sinatra::Base
     link.tags << tag
     link.save
     redirect '/links'
+
+  end
+
+  get '/tags/:search' do
+    tag = Tag.first(name: params[:search])
+    @links = tag.links
+    erb :search
+
+
+
+
   end
 
 

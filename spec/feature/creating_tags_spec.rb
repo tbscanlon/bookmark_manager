@@ -5,7 +5,6 @@ feature "tagging links" do
     add_link(url: "http://www.facebook.com", title: "Facebook", tag: "Social Media")
 
     link = Link.first
-    p link
     expect(link.tags.map(&:name)).to include('Social Media')
   end
 end
