@@ -1,0 +1,16 @@
+<h1>Links</h1>
+
+<h2>
+<% if current_user %>
+Welcome <%= current_user.email %>
+<% end %>
+</h2>
+
+ <ul id="links">
+   <% @links.each do |link|%>
+    <li>
+      Title: <%=link.title%>
+      URL: <%= link.url %>
+    </li>
+  <% end %>
+ </ul>

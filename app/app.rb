@@ -1,68 +1,51 @@
-ENV['RACK_ENV'] ||= "development"
+# app/app.rb
+ENV['RACK_ENV'] ||= 'development'
 
-require 'bcrypt'
 require 'sinatra/base'
-require './app/init'
-require_relative 'helper'
+require_relative 'data_mapper_setup'
 
 class BookmarkManager < Sinatra::Base
   enable :sessions
-  set :session_secret, 'very secure yes'
+  set :session_secret, 'i like cookies lol xo'
 
   get '/links' do
     @links = Link.all
-    @tags = Tag.all
-    erb :links
+    erb :'links/index'
   end
 
-  get '/links/add' do
-    erb :add
+  get '/links/new' do
+    erb :'links/new'
   end
 
-  post '/links/add' do
-    link = Link.new(title: params[:title], url: params[:url])
-    params[:tag].split.each { |tag| link.tags << Tag.first_or_create(name: tag) }
+  post '/links' do
+    link = Link.new(url: params[:url], title: params[:title])
+    params[:tags].split(', ').each do |tag|
+      link.tags << Tag.first_or_create(name:tag)
+    end
     link.save
-    redirect '/links'
-
+    redirect to '/links'
   end
 
-  get '/links/add_tag' do
-    erb :add_tag
+  get '/tags/:name' do
+    tag = Tag.first(name: params[:name])
+    @user = session[:email]
+    @links = tag ? tag.links : []
+    erb :'links/index'
   end
 
-  post '/links/add_tag' do
-    link = Link.first(title: params[:website])
-    tag = Tag.first_or_create(name: params[:add_tag])
-    link.tags << tag
-    link.save
-    redirect '/links'
+  get '/register' do
+    erb :'register'
   end
 
-  get '/tags/:search' do
-    tag = Tag.first(name: params[:search])
-    @links = tag.links
-    erb :search
-  end
-
-  get '/signup' do
-    erb :signup
-  end
-
-  post '/signup' do
+  post '/register' do
     user = User.create(email: params[:email], password: params[:password])
-
-    user.save
-    session[:email] = user.email
-    p session[:email]
-    redirect '/links'
+    session[:user_id] = user.id
+    redirect to '/links'
   end
 
   helpers do
     def current_user
-      @current_user ||= User.get(session[:email])
+      @current_user ||= User.get(session[:user_id])
     end
   end
-
-  run! if app_file == $PROGRAM_NAME
 end
