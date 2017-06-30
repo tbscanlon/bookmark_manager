@@ -12,6 +12,10 @@ class User
 
   validates_confirmation_of :password
 
+  def good_password?
+    password == password_confirmation
+  end
+
   def password=(password)
     @password = password
     self.password_digest = BCrypt::Password.create(password)
