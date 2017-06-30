@@ -7,13 +7,14 @@ class User
   attr_reader :password
 
   property :id, Serial
-  property :email, String
+  property :email, String, required: true, unique: true, format: :email_address
   property :password_digest, Text
 
   validates_confirmation_of :password
 
-  def good_password?
-    password == password_confirmation
+  def self.authenticate(email, password)
+    user = first(email: email)
+    return user if user && BCrypt::Password.new(user.password_digest) == password
   end
 
   def password=(password)

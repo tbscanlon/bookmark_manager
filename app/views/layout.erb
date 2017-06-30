@@ -10,12 +10,12 @@
       Welcome <%= current_user.email %>
       <% end %>
 
-      <% if flash[:notice] %>
+      <% if flash[:errors] && !flash[:errors].empty? %>
       <div class="" id="notice">
-        <%= flash[:notice] %>
+        <%= flash[:errors] %>
       </div>
       <% end %>
-      
+
     <%= yield %>
   </body>
 </html>
