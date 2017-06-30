@@ -8,10 +8,20 @@
   <body>
       <% if current_user %>
       Welcome <%= current_user.email %>
+      <form class="" action="/sessions" method="post">
+        <input type="hidden" name="_method" value="delete">
+        <input type="submit" value="Sign out">
+      </form>
+      <% end %>
+
+      <% if flash[:notice] %>
+        <div class="" id="notice">
+          <%= flash[:notice] %>
+        </div>
       <% end %>
 
       <% if flash[:errors] && !flash[:errors].empty? %>
-      <div class="" id="notice">
+      <div class="" id="error">
         <%= flash[:errors] %>
       </div>
       <% end %>

@@ -36,6 +36,7 @@ end
 
 feature 'User Sign in' do
   let(:email_address) { 'tom@test.com' }
+
   before do
     sign_up
   end
@@ -43,5 +44,20 @@ feature 'User Sign in' do
   scenario 'successfully signs in' do
     sign_in
     expect(page).to have_content "Welcome #{email_address}"
+  end
+end
+
+feature 'User Sign out' do
+  let(:email_address) { 'tom@test.com' }
+
+  before do
+    sign_in
+    sign_up
+  end
+
+  scenario 'successfully signs out' do
+    click_button 'Sign out'
+    expect(page).to have_content('goodbye!')
+    expect(page).not_to have_content("Welcome, #{email_address}")
   end
 end
