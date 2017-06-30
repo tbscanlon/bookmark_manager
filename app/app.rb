@@ -19,16 +19,13 @@ class BookmarkManager < Sinatra::Base
 
   post '/links' do
     link = Link.new(url: params[:url], title: params[:title])
-    params[:tags].split(', ').each do |tag|
-      link.tags << Tag.first_or_create(name:tag)
-    end
+    params[:tags].split(', ').each { |tag| link.tags << Tag.first_or_create(name:tag) }
     link.save
     redirect to '/links'
   end
 
   get '/tags/:name' do
     tag = Tag.first(name: params[:name])
-    @user = session[:email]
     @links = tag ? tag.links : []
     erb :'links/index'
   end
@@ -38,7 +35,7 @@ class BookmarkManager < Sinatra::Base
   end
 
   post '/register' do
-    user = User.create(email: params[:email], password: params[:password])
+    user = User.create(email: params[:email], password: params[:password], password_confirmation: params[:password_confirmation])
     session[:user_id] = user.id
     redirect to '/links'
   end
